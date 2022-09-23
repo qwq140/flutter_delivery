@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_delivery/app/common/components/custom_text_form_field.dart';
 import 'package:flutter_delivery/app/common/view/splash_screen.dart';
-import 'package:flutter_delivery/app/modules/user/login_screen.dart';
+import 'package:flutter_delivery/app/modules/user/view/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

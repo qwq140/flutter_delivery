@@ -3,7 +3,7 @@ import 'package:flutter_delivery/app/common/const/colors.dart';
 import 'package:flutter_delivery/app/common/const/data.dart';
 import 'package:flutter_delivery/app/common/layout/default_layout.dart';
 import 'package:flutter_delivery/app/common/view/root_tab.dart';
-import 'package:flutter_delivery/app/modules/user/login_screen.dart';
+import 'package:flutter_delivery/app/modules/user/view/login_screen.dart';
 
 // 앱 첫 실행 시
 // 토큰 유무 확인
