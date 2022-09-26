@@ -1,24 +1,61 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_delivery/app/common/const/data.dart';
 import 'package:flutter_delivery/app/modules/restaurant/component/restaurant_card.dart';
 
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({Key? key}) : super(key: key);
 
+  Future<List> paginateRestaurant() async {
+    final dio = Dio();
+
+    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+
+    final resp = await dio.get(
+      'http://$ip/restaurant',
+      options: Options(headers: {
+        'authorization': 'Bearer $accessToken',
+      }),
+    );
+
+    return resp.data['data'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: RestaurantCard(
-          image: Image.asset(
-            'assets/img/food/ddeok_bok_gi.jpg',
-            fit: BoxFit.fill,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: FutureBuilder<List>(
+            future: paginateRestaurant(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              return ListView.separated(
+                itemBuilder: (context, index) {
+                  final item = snapshot.data![index];
+                  return RestaurantCard(
+                    image: Image.network(
+                      'http://$ip${item['thumbUrl']}',
+                      fit: BoxFit.fill,
+                    ),
+                    name: item['name'],
+                    tags: List<String>.from(item['tags']),
+                    ratingsCount: item['ratingsCount'],
+                    deliveryTime: item['deliveryTime'],
+                    deliveryFee: item['deliveryFee'],
+                    ratings: item['ratings'],
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
+                },
+                itemCount: snapshot.data!.length,
+              );
+            },
           ),
-          name: '불타는 떡볶이',
-          tags: ['떡볶이', '치즈', '매운맛'],
-          ratingCount: 100,
-          deliveryTime: 15,
-          deliveryFee: 2000,
-          rating: 4.5,
         ),
       ),
     );
