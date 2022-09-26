@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_delivery/app/common/const/colors.dart';
+import 'package:flutter_delivery/app/common/const/data.dart';
+import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.dart';
 
 class RestaurantCard extends StatelessWidget {
   const RestaurantCard({
@@ -33,6 +35,21 @@ class RestaurantCard extends StatelessWidget {
 
   // 평점
   final double ratings;
+
+  factory RestaurantCard.fromModel({required RestaurantModel model}){
+    return RestaurantCard(
+      image: Image.network(
+        'http://$ip${model.thumbUrl}',
+        fit: BoxFit.fill,
+      ),
+      name: model.name,
+      tags: model.tags,
+      ratingsCount: model.ratingsCount,
+      deliveryTime: model.deliveryTime,
+      deliveryFee: model.deliveryFee,
+      ratings: model.ratings,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
