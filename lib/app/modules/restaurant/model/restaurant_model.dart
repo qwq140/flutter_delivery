@@ -1,4 +1,5 @@
 import 'package:flutter_delivery/app/common/const/data.dart';
+import 'package:flutter_delivery/app/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'restaurant_model.g.dart';
@@ -14,7 +15,7 @@ class RestaurantModel {
   final String id;
   final String name;
   @JsonKey(
-    fromJson: pathToUrl,
+    fromJson: DataUtils.pathToUrl,
   )
   final String thumbUrl;
   final List<String> tags;
@@ -43,19 +44,4 @@ class RestaurantModel {
   static pathToUrl(String value){
     return 'http://$ip$value';
   }
-
-  // factory RestaurantModel.fromJson({required Map<String, dynamic> json}) {
-  //   return RestaurantModel(
-  //     id: json['id'],
-  //     name: json['name'],
-  //     thumbUrl: 'http://$ip${json['thumbUrl']}',
-  //     tags: List<String>.from(json['tags']),
-  //     priceRange: RestaurantPriceRange.values
-  //         .firstWhere((e) => e.name == json['priceRange']),
-  //     ratings: json['ratings'],
-  //     ratingsCount: json['ratingsCount'],
-  //     deliveryTime: json['deliveryTime'],
-  //     deliveryFee: json['deliveryFee'],
-  //   );
-  // }
 }
