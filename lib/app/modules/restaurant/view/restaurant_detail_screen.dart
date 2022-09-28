@@ -7,6 +7,8 @@ import 'package:flutter_delivery/app/common/layout/default_layout.dart';
 import 'package:flutter_delivery/app/modules/product/component/product_card.dart';
 import 'package:flutter_delivery/app/modules/restaurant/component/restaurant_card.dart';
 import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_detail_model.dart';
+import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.dart';
+import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_provider.dart';
 import 'package:flutter_delivery/app/modules/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,36 +19,27 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(restaurantDetailProvider(id));
+
+    if(state == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return DefaultLayout(
       title: '불타는 떡볶이',
-      child: FutureBuilder<RestaurantDetailModel>(
-        future: ref.watch(restaurantRepositoryProvider).getRestaurantDetail(id: id),
-        builder: (context, snapshot) {
-          if(snapshot.hasError){
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-
-          if(!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(color: PRIMARY_COLOR,),
-            );
-          }
-
-          return CustomScrollView(
-            slivers: [
-              renderTop(model: snapshot.data!),
-              renderLabel(),
-              renderProducts(products: snapshot.data!.products),
-            ],
-          );
-        }
+      child: CustomScrollView(
+        slivers: [
+          renderTop(model: state),
+          renderLabel(),
+          // renderProducts(products: snapshot.data!.products),
+        ],
       ),
     );
   }
 
-  SliverToBoxAdapter renderTop({required RestaurantDetailModel model}) {
+  SliverToBoxAdapter renderTop({required RestaurantModel model}) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
         model: model,

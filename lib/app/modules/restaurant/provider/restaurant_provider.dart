@@ -4,6 +4,18 @@ import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.d
 import 'package:flutter_delivery/app/modules/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// restaurantProvider에 이미 있는 데이터를 가져와서 보여준다.
+final restaurantDetailProvider = Provider.family<RestaurantModel?, String>((ref, id) {
+  final state = ref.watch(restaurantProvider);
+
+  // 리스트가 없는 경우
+  if(state is! CursorPagination<RestaurantModel>){
+    return null;
+  }
+
+  return state.data.firstWhere((element) => element.id == id);
+});
+
 final restaurantProvider =
     StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>((ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
