@@ -10,6 +10,7 @@ import 'package:flutter_delivery/app/modules/restaurant/component/restaurant_car
 import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_detail_model.dart';
 import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.dart';
 import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_provider.dart';
+import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_rating_provider.dart';
 import 'package:flutter_delivery/app/modules/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
@@ -35,6 +36,8 @@ class _RestaurantDetailScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(restaurantDetailProvider(widget.id));
+    final ratingState = ref.watch(restaurantRatingProvider(widget.id));
+    print(ratingState);
 
     if (state == null) {
       return Center(
