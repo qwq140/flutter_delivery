@@ -4,8 +4,10 @@ import 'package:flutter_delivery/app/common/const/colors.dart';
 import 'package:flutter_delivery/app/common/const/data.dart';
 import 'package:flutter_delivery/app/common/dio/dio.dart';
 import 'package:flutter_delivery/app/common/layout/default_layout.dart';
+import 'package:flutter_delivery/app/common/model/cursor_pagination_model.dart';
 import 'package:flutter_delivery/app/modules/product/component/product_card.dart';
 import 'package:flutter_delivery/app/modules/rating/component/rating_card.dart';
+import 'package:flutter_delivery/app/modules/rating/model/rating_model.dart';
 import 'package:flutter_delivery/app/modules/restaurant/component/restaurant_card.dart';
 import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_detail_model.dart';
 import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.dart';
@@ -50,23 +52,30 @@ class _RestaurantDetailScreenState
       child: CustomScrollView(
         slivers: [
           renderTop(model: state),
-          if(state is! RestaurantDetailModel) renderLoading(),
+          if (state is! RestaurantDetailModel) renderLoading(),
           if (state is RestaurantDetailModel) renderLabel(),
           if (state is RestaurantDetailModel)
             renderProducts(products: state.products),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverToBoxAdapter(
-              child: RatingCard(
-                content: '맛있습니다.',
-                avatarImage: AssetImage('assets/img/logo/codefactory_logo.png'),
-                email: 'test@test.com',
-                images: [],
-                rating: 4,
-              ),
-            ),
-          )
+          if (ratingState is CursorPagination<RatingModel>)
+            renderRatings(models: ratingState.data),
         ],
+      ),
+    );
+  }
+
+  SliverPadding renderRatings({required List<RatingModel> models}) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: RatingCard.fromModel(
+              model: models[index],
+            ),
+          ),
+          childCount: models.length,
+        ),
       ),
     );
   }
@@ -98,11 +107,10 @@ class _RestaurantDetailScreenState
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-              (context, index) =>
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: ProductCard.fromModel(model: products[index]),
-              ),
+          (context, index) => Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: ProductCard.fromModel(model: products[index]),
+          ),
           childCount: products.length,
         ),
       ),
@@ -116,16 +124,15 @@ class _RestaurantDetailScreenState
         delegate: SliverChildListDelegate(
           List.generate(
             3,
-                (index) =>
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32),
-                  child: SkeletonParagraph(
-                    style: const SkeletonParagraphStyle(
-                      lines: 5,
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 32),
+              child: SkeletonParagraph(
+                style: const SkeletonParagraphStyle(
+                  lines: 5,
+                  padding: EdgeInsets.zero,
                 ),
+              ),
+            ),
           ),
         ),
       ),
