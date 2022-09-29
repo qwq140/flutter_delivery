@@ -11,6 +11,7 @@ import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.d
 import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_provider.dart';
 import 'package:flutter_delivery/app/modules/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -18,11 +19,12 @@ class RestaurantDetailScreen extends ConsumerStatefulWidget {
   const RestaurantDetailScreen({Key? key, required this.id}) : super(key: key);
 
   @override
-  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
 }
 
-class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen> {
-
+class _RestaurantDetailScreenState
+    extends ConsumerState<RestaurantDetailScreen> {
   @override
   void initState() {
     super.initState();
@@ -33,7 +35,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
   Widget build(BuildContext context) {
     final state = ref.watch(restaurantDetailProvider(widget.id));
 
-    if(state == null){
+    if (state == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -44,10 +46,10 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
       child: CustomScrollView(
         slivers: [
           renderTop(model: state),
-          if(state is RestaurantDetailModel)
-          renderLabel(),
-          if(state is RestaurantDetailModel)
-          renderProducts(products: state.products),
+          if(state is! RestaurantDetailModel) renderLoading(),
+          if (state is RestaurantDetailModel) renderLabel(),
+          if (state is RestaurantDetailModel)
+            renderProducts(products: state.products),
         ],
       ),
     );
@@ -74,7 +76,8 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     );
   }
 
-  SliverPadding renderProducts({required List<RestaurantProductModel> products}) {
+  SliverPadding renderProducts(
+      {required List<RestaurantProductModel> products}) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
@@ -84,6 +87,28 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
             child: ProductCard.fromModel(model: products[index]),
           ),
           childCount: products.length,
+        ),
+      ),
+    );
+  }
+
+  SliverPadding renderLoading() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          List.generate(
+            3,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 32),
+              child: SkeletonParagraph(
+                style: const SkeletonParagraphStyle(
+                  lines: 5,
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
