@@ -11,7 +11,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
+    // watch - 값이 변경될때마다 다시 빌드
+    // read - 한번만 읽고 값이 변경돼도 다시 빌드하지 않음
+    final router = ref.read(routerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
