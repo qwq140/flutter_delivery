@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_delivery/app/common/const/colors.dart';
 import 'package:flutter_delivery/app/common/layout/default_layout.dart';
+import 'package:flutter_delivery/app/modules/product/view/product_screen.dart';
 import 'package:flutter_delivery/app/modules/restaurant/view/restaurant_screen.dart';
 import 'package:flutter_delivery/app/modules/user/view/profile_screen.dart';
 
-import '../../modules/product/view/product_screen.dart';
 
 class RootTab extends StatefulWidget {
 
-  static String routeName = 'home';
+  static String get routeName => 'home';
 
   const RootTab({Key? key}) : super(key: key);
 

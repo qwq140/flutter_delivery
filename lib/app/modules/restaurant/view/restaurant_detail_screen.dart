@@ -20,7 +20,7 @@ import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
-
+  static String get routeName => 'restaurantDetail';
   const RestaurantDetailScreen({Key? key, required this.id}) : super(key: key);
 
   @override

@@ -24,6 +24,10 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
+  void logout(){
+    ref.read(userMeProvider.notifier).logout();
+  }
+
   List<GoRoute> get routes => [
     GoRoute(
       path: '/',
@@ -32,6 +36,7 @@ class AuthProvider extends ChangeNotifier {
       routes: [
         GoRoute(
           path: 'restaurant/:rid',
+          name: RestaurantDetailScreen.routeName,
           builder: (_, state) => RestaurantDetailScreen(id: state.params['rid']!)
         )
       ]
