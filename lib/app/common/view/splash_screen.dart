@@ -11,6 +11,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 앱 첫 실행 시
 // 토큰 유무 확인
 class SplashScreen extends ConsumerStatefulWidget {
+
+  static String get routeName => 'splash';
+
   const SplashScreen({Key? key}) : super(key: key);
 
   @override

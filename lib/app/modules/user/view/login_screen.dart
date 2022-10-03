@@ -12,6 +12,9 @@ import 'package:flutter_delivery/app/common/view/root_tab.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
+
+  static String routeName = 'login';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
