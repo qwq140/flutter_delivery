@@ -1,16 +1,43 @@
 import 'package:flutter_delivery/app/modules/product/model/product_model.dart';
 import 'package:flutter_delivery/app/modules/user/model/basket_item_model.dart';
+import 'package:flutter_delivery/app/modules/user/model/patch_basket_body.dart';
+import 'package:flutter_delivery/app/modules/user/repository/user_me_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 
-final basketProvider = StateNotifierProvider<BasketNotifier, List<BasketItemModel>>((ref){
-  return BasketNotifier();
+final basketProvider =
+    StateNotifierProvider<BasketNotifier, List<BasketItemModel>>((ref) {
+  final repository = ref.watch(userMeRepositoryProvider);
+  return BasketNotifier(repository: repository);
 });
 
 class BasketNotifier extends StateNotifier<List<BasketItemModel>> {
-  BasketNotifier() : super([]);
+  final UserMeRepository repository;
+
+  BasketNotifier({required this.repository}) : super([]);
+
+  Future<void> patchBasket() async {
+    await repository.patchBasket(
+      body: PatchBasketBody(
+        basket: state
+            .map(
+              (e) => PatchBasketBodyBasket(
+                  productId: e.product.id, count: e.count),
+            )
+            .toList(),
+      ),
+    );
+  }
 
   Future addToBasket({required ProductModel product}) async {
+    // 요청을 먼저 보내고
+    // 응답이 오면
+    // 캐시를 업데이트 했다.
+    // 이 경우 사용자가 앱이 느리다고 느낄 수 있다.
+    // 에러가 날때 치명적인 에러인가?
+    // 결제창에서 다시 유저가 확인할 것이므로 치명적이지 않는 에러일 것이다.
+    // 사용자가 느리다고 느끼지 않게 하기 위해 상태를 먼저 업데이트하고 통신을 한다.
+
     // 1) 아직 장바구니에 해당되는 상품이 없다면
     //    장바구니에 상품을 추가한다.
     // 2) 만약에 이미 들어있다면
@@ -29,6 +56,9 @@ class BasketNotifier extends StateNotifier<List<BasketItemModel>> {
         BasketItemModel(product: product, count: 1),
       ];
     }
+    // Optimistic Response (긍정적 응답)
+    // 응답이 성공할거라고 가정하고 상태를 먼저 업데이트함
+    await patchBasket();
   }
 
   Future removeFromBasket({
@@ -56,5 +86,6 @@ class BasketNotifier extends StateNotifier<List<BasketItemModel>> {
               e.product.id == product.id ? e.copyWith(count: e.count - 1) : e)
           .toList();
     }
+    await patchBasket();
   }
 }
