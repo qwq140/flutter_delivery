@@ -17,8 +17,10 @@ import 'package:flutter_delivery/app/modules/restaurant/model/restaurant_model.d
 import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_provider.dart';
 import 'package:flutter_delivery/app/modules/restaurant/provider/restaurant_rating_provider.dart';
 import 'package:flutter_delivery/app/modules/restaurant/repository/restaurant_repository.dart';
+import 'package:flutter_delivery/app/modules/restaurant/view/basket_screen.dart';
 import 'package:flutter_delivery/app/modules/user/provider/basket_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
@@ -67,7 +69,9 @@ class _RestaurantDetailScreenState
       title: '불타는 떡볶이',
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-
+          // goNamed : Nesting route 사용
+          // pushNamed : 현재 라우트 위에 스크린을 올리는 방식
+          context.pushNamed(BasketScreen.routeName);
         },
         backgroundColor: PRIMARY_COLOR,
         child: Badge(
