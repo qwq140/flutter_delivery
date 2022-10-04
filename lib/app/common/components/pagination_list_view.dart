@@ -80,26 +80,33 @@ class _PaginationListViewState<T extends IModelWithId> extends ConsumerState<Pag
     final cp = state as CursorPagination<T>;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ListView.separated(
-        controller: controller,
-        itemBuilder: (_, index) {
-          if(index == cp.data.length){
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Center(
-                child: cp is CursorPaginationFetchingMore ? CircularProgressIndicator() : Text('마지막 데이터입니다.'),
-              ),
-            );
-          }
-
-          final pItem = cp.data[index];
-
-          return widget.itemBuilder(context, index, pItem);
+      child: RefreshIndicator(
+        color: PRIMARY_COLOR,
+        onRefresh: () async {
+          ref.read(widget.provider.notifier).paginate(forceRefetch: true);
         },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 16);
-        },
-        itemCount: cp.data.length + 1,
+        child: ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: controller,
+          itemBuilder: (_, index) {
+            if(index == cp.data.length){
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Center(
+                  child: cp is CursorPaginationFetchingMore ? CircularProgressIndicator() : Text('마지막 데이터입니다.'),
+                ),
+              );
+            }
+
+            final pItem = cp.data[index];
+
+            return widget.itemBuilder(context, index, pItem);
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 16);
+          },
+          itemCount: cp.data.length + 1,
+        ),
       ),
     );
   }
