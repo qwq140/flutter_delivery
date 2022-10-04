@@ -37,8 +37,7 @@ class _PaginationListViewState<T extends IModelWithId> extends ConsumerState<Pag
   }
 
   void listener() {
-    PaginationUtils.paginate(
-        controller: controller, provider: ref.read(widget.provider.notifier));
+    PaginationUtils.paginate(controller: controller, provider: ref.read(widget.provider.notifier));
   }
 
   @override
