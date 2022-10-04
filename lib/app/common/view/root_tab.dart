@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_delivery/app/common/const/colors.dart';
 import 'package:flutter_delivery/app/common/layout/default_layout.dart';
+import 'package:flutter_delivery/app/modules/order/view/order_screen.dart';
 import 'package:flutter_delivery/app/modules/product/view/product_screen.dart';
 import 'package:flutter_delivery/app/modules/restaurant/view/restaurant_screen.dart';
 import 'package:flutter_delivery/app/modules/user/view/profile_screen.dart';
@@ -43,16 +44,6 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: '코팩 딜리버리',
-      child: TabBarView(
-        controller: _tabController,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          RestaurantScreen(),
-          ProductScreen(),
-          Container(child: Center(child: Text('주문')),),
-          ProfileScreen(),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,
         unselectedItemColor: BODY_TEXT_COLOR,
@@ -71,6 +62,16 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
               icon: Icon(Icons.receipt_long_outlined), label: '주문'),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_outline), label: '프로필'),
+        ],
+      ),
+      child: TabBarView(
+        controller: _tabController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          RestaurantScreen(),
+          ProductScreen(),
+          OrderScreen(),
+          ProfileScreen(),
         ],
       ),
     );
