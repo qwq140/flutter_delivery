@@ -18,28 +18,48 @@ class OrderStateNotifier extends StateNotifier<List<OrderModel>> {
   OrderStateNotifier({required this.ref, required this.repository}) : super([]);
 
   Future<bool> postOrder() async {
-    try{
-      const uuid = Uuid();
+    // try{
+    //   const uuid = Uuid();
+    //
+    //   final id = uuid.v4();
+    //
+    //   final state = ref.read(basketProvider);
+    //
+    //   final resp = await repository.postOrder(
+    //     body: PostOrderBody(
+    //       id: id,
+    //       products: state
+    //           .map((e) =>
+    //           PostOrderBodyProduct(productId: e.product.id, count: e.count))
+    //           .toList(),
+    //       totalPrice:
+    //       state.fold<int>(0, (p, n) => p + (n.count * n.product.price)),
+    //       createdAt: DateTime.now().toString(),
+    //     ),
+    //   );
+    //   return true;
+    // } catch(e){
+    //   print(e);
+    //   return false;
+    // }
+    const uuid = Uuid();
 
-      final id = uuid.v4();
+    final id = uuid.v4();
 
-      final state = ref.read(basketProvider);
+    final state = ref.read(basketProvider);
 
-      final resp = await repository.postOrder(
-        body: PostOrderBody(
-          id: id,
-          products: state
-              .map((e) =>
-              PostOrderBodyProduct(productId: e.product.id, count: e.count))
-              .toList(),
-          totalPrice:
-          state.fold<int>(0, (p, n) => p + (n.count * n.product.price)),
-          createdAt: DateTime.now().toString(),
-        ),
-      );
-      return true;
-    } catch(e){
-      return false;
-    }
+    final resp = await repository.postOrder(
+      body: PostOrderBody(
+        id: id,
+        products: state
+            .map((e) =>
+            PostOrderBodyProduct(productId: e.product.id, count: e.count))
+            .toList(),
+        totalPrice:
+        state.fold<int>(0, (p, n) => p + (n.count * n.product.price)),
+        createdAt: DateTime.now().toString(),
+      ),
+    );
+    return true;
   }
 }
